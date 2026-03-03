@@ -34,7 +34,7 @@ jobs:
           run-id: ${{ github.event.inputs.workflow_run_id || github.event.workflow_run.id }}
 
       - name: Publish API Test Results
-        uses: dorny/test-reporter@v2.5.0
+        uses: dorny/test-reporter@v2.6.0
         with:
           name: example_report
           path: "**.trx"
