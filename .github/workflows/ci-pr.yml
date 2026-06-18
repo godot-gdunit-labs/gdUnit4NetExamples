@@ -21,7 +21,7 @@ jobs:
     runs-on: "ubuntu-24.04"
     timeout-minutes: 1
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v5
         with:
           global-json-file: "global.json"
@@ -32,7 +32,7 @@ jobs:
     runs-on: "ubuntu-24.04"
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
         with:
@@ -61,7 +61,7 @@ jobs:
     runs-on: "ubuntu-24.04"
     timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/formatting_checks
 
   example-tests:
@@ -71,7 +71,7 @@ jobs:
     timeout-minutes: 3
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
         with:
