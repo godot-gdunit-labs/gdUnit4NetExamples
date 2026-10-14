@@ -30,7 +30,7 @@ jobs:
         with:
           name: example_report
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: MikeSchulze/gdUnit4NetExamples
+          repository: ${{ github.repository }}
           run-id: ${{ github.event.inputs.workflow_run_id || github.event.workflow_run.id }}
 
       - name: Publish API Test Results
