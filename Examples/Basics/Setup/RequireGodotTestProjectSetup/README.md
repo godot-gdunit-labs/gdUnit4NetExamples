@@ -56,7 +56,7 @@ No test is available in [...].dll
 ## Difference from MinimalTestProjectSetup
 
 | Aspect | MinimalTestProjectSetup | RequireGodotTestProjectSetup |
-|--------|------------------------|------------------------------|
+| --- | --- | --- |
 | **Purpose** | Test pure .NET code | Test Godot-specific functionality |
 | **Runtime** | .NET only | Requires Godot runtime |
 | **Test Attribute** | `[TestCase]` only | `[TestCase]` + `[RequireGodotRuntime]` |

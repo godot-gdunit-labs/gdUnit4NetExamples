@@ -82,7 +82,7 @@ Master fundamental testing concepts and patterns:
 ## Learning Progression
 
 | Step | Focus | What You'll Build |
-|------|-------|-------------------|
+| --- | --- | --- |
 | **1. Setup** | Project configuration | Working test projects |
 | **2. Basic Tests** | Fundamental concepts | Simple assertion tests |
 | **3. Godot Tests** | Runtime-specific testing | Tests for Godot objects |

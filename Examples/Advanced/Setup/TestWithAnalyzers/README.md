@@ -91,7 +91,7 @@ public void TestPureCSharpObject()      // No Godot types = no warnings
 ### Core Rules
 
 | Rule ID | Description | Severity |
-|---------|-------------|----------|
+| --- | --- | --- |
 | **GdUnit0201** | Multiple TestCase attributes not allowed with DataPoint | Error |
 | **GdUnit0500** | Godot Runtime Required for Test Class | Error |
 | **GdUnit0501** | Godot Runtime Required for Test Method | Error |
@@ -248,7 +248,7 @@ dotnet build
 ## Comparison with Basic Setup
 
 | Aspect | Without Analyzers | With Analyzers |
-|--------|------------------|----------------|
+| --- | --- | --- |
 | **Error Detection** | Runtime only | Compile-time + Runtime |
 | **Error Messages** | Generic exceptions | Specific, actionable |
 | **Developer Experience** | Debug → Fix → Retry | Fix → Success |
