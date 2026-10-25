@@ -17,7 +17,7 @@ runs:
   using: "composite"
   steps:
     - name: "Validate Markdown"
-      uses: DavidAnson/markdownlint-cli2-action@v20
+      uses: DavidAnson/markdownlint-cli2-action@v24
       with:
         config: ".github/actions/formatting_checks/.markdownlint.jsonc"
         globs: "**/*.md"
@@ -34,13 +34,13 @@ runs:
         matcher: true
 
     - name: "Validate JSON and YAML"
-      uses: GrantBirki/json-yaml-validate@v3.3.2
+      uses: GrantBirki/json-yaml-validate@v5.0.1
       with:
         exclude_file: ".github/actions/formatting_checks/.validationignore"
         use_gitignore: ${{ inputs.use-gitignore }}
 
     - name: "Setup .NET SDK"
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v6
       with:
         global-json-file: "global.json"
 

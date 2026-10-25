@@ -288,7 +288,7 @@ No manual symlink creation needed!
 ## Comparison with Other Setups
 
 | Aspect | Single Project | Multi-Project with ProjectReference | Multi-Project with Symlinks (This) |
-|--------|---------------|-------------------------------------|-------------------------------------|
+| --- | --- | --- | --- |
 | **Resource Paths** | Direct access | Need adjustment | Original paths preserved |
 | **Build Complexity** | Simple | CS0436 warnings | Clean build |
 | **Assembly Count** | One | Two | One (test only) |
