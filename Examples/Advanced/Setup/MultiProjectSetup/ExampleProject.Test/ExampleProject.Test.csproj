@@ -3,11 +3,9 @@
     Uses symbolic links to share source code between main and test projects
     without duplicating files or using ProjectReference
 -->
-<Project Sdk="Godot.NET.Sdk/4.5.1" InitialTargets="CreateSymlinks">
+<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
 
   <PropertyGroup>
-    <!-- Disable Central Package Management for Godot projects -->
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
     <TargetFramework>net9.0</TargetFramework>
     <LangVersion>12.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -25,11 +23,11 @@
 
   <ItemGroup>
     <!-- Core .NET testing infrastructure -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
     <!-- GdUnit4 testing framework for Godot -->
-    <PackageReference Include="gdUnit4.api" Version="5.1.0-rc3"/>
+    <PackageReference Include="gdUnit4.api"/>
     <!-- Test adapter to integrate GdUnit4 with .NET test runners -->
-    <PackageReference Include="gdUnit4.test.adapter" Version="3.0.0"/>
+    <PackageReference Include="gdUnit4.test.adapter"/>
   </ItemGroup>
 
   <!--
