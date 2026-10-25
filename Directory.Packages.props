@@ -1,0 +1,31 @@
+<Project>
+  <!--
+  Central Package Management:
+  All NuGet package versions used by the projects in this solution are defined here.
+  Projects reference packages without a version: <PackageReference Include="gdUnit4.api"/>
+  The Godot.NET.Sdk version is defined centrally in global.json (msbuild-sdks).
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Dedicated gdUnit4Net package versions -->
+    <GdUnit4ApiVersion>5.1.0-rc6</GdUnit4ApiVersion>
+    <GdUnit4TestAdapterVersion>3.2.0</GdUnit4TestAdapterVersion>
+    <GdUnit4AnalyzersVersion>1.1.0</GdUnit4AnalyzersVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- gdUnit4Net testing framework -->
+    <PackageVersion Include="gdUnit4.api" Version="$(GdUnit4ApiVersion)"/>
+    <PackageVersion Include="gdUnit4.test.adapter" Version="$(GdUnit4TestAdapterVersion)"/>
+    <PackageVersion Include="gdUnit4.analyzers" Version="$(GdUnit4AnalyzersVersion)"/>
+
+    <!-- .NET test platform -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
+
+    <!-- Code analyzers -->
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.507"/>
+  </ItemGroup>
+</Project>

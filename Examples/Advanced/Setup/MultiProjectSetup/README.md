@@ -52,7 +52,7 @@ This project demonstrates:
 The critical part of this setup is using `InitialTargets` to create the symlink **before** MSBuild evaluates which files to compile:
 
 ```xml
-<Project Sdk="Godot.NET.Sdk/4.5.1" InitialTargets="CreateSymlinks">
+<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
 ```
 
 This ensures:
@@ -66,7 +66,7 @@ This ensures:
 ### 1. Test Project Configuration
 
 ```xml
-<Project Sdk="Godot.NET.Sdk/4.5.1" InitialTargets="CreateSymlinks">
+<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>GdUnit4.Examples.Advanced.Setup.MultiProjectSetup</RootNamespace>
@@ -85,9 +85,9 @@ This ensures:
     <!-- Core .NET testing infrastructure -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
     <!-- Test frameworks -->
-    <PackageReference Include="gdUnit4.api" Version="5.1.0-rc3"/>
+    <PackageReference Include="gdUnit4.api" Version="5.1.0-rc6"/>
     <!-- Test adapter to integrate GdUnit4 with .NET test runners -->
-    <PackageReference Include="gdUnit4.test.adapter" Version="3.0.0"/>
+    <PackageReference Include="gdUnit4.test.adapter" Version="3.2.0"/>
   </ItemGroup>
 </Project>
 ```
@@ -306,7 +306,7 @@ No manual symlink creation needed!
 **Solution:** Ensure InitialTargets is set in the project file:
 
 ```xml
-<Project Sdk="Godot.NET.Sdk/4.5.1" InitialTargets="CreateSymlinks">
+<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
 ```
 
 ### Windows Symlink Issues

@@ -92,7 +92,7 @@ jobs:
       - name: "Install Godot Net"
         uses: ./.github/actions/godot-install
         with:
-          godot-version: "4.5.1"
+          godot-version: "4.7"
           godot-mono: true
           godot-status-version: "stable"
           godot-bin-name: "linux_x86_64"
