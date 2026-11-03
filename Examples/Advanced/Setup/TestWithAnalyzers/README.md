@@ -90,11 +90,11 @@ public void TestPureCSharpObject()      // No Godot types = no warnings
 
 ### Core Rules
 
-| Rule ID | Description | Severity |
-| --- | --- | --- |
-| **GdUnit0201** | Multiple TestCase attributes not allowed with DataPoint | Error |
-| **GdUnit0500** | Godot Runtime Required for Test Class | Error |
-| **GdUnit0501** | Godot Runtime Required for Test Method | Error |
+| Rule ID        | Description                                             | Severity |
+| -------------- | ------------------------------------------------------- | -------- |
+| **GdUnit0201** | Multiple TestCase attributes not allowed with DataPoint | Error    |
+| **GdUnit0500** | Godot Runtime Required for Test Class                   | Error    |
+| **GdUnit0501** | Godot Runtime Required for Test Method                  | Error    |
 
 ### What Gets Analyzed
 
@@ -247,14 +247,14 @@ dotnet build
 
 ## Comparison with Basic Setup
 
-| Aspect | Without Analyzers | With Analyzers |
-| --- | --- | --- |
-| **Error Detection** | Runtime only | Compile-time + Runtime |
-| **Error Messages** | Generic exceptions | Specific, actionable |
-| **Developer Experience** | Debug → Fix → Retry | Fix → Success |
-| **Team Consistency** | Manual code reviews | Automated enforcement |
-| **Learning Curve** | Trial and error | Guided best practices |
-| **CI/CD Reliability** | May pass with broken tests | Fails fast on mistakes |
+| Aspect                   | Without Analyzers          | With Analyzers         |
+| ------------------------ | -------------------------- | ---------------------- |
+| **Error Detection**      | Runtime only               | Compile-time + Runtime |
+| **Error Messages**       | Generic exceptions         | Specific, actionable   |
+| **Developer Experience** | Debug → Fix → Retry        | Fix → Success          |
+| **Team Consistency**     | Manual code reviews        | Automated enforcement  |
+| **Learning Curve**       | Trial and error            | Guided best practices  |
+| **CI/CD Reliability**    | May pass with broken tests | Fails fast on mistakes |
 
 ## Next Steps
 

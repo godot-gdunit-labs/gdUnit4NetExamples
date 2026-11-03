@@ -1,4 +1,4 @@
-﻿# Basics Examples
+# Basics Examples
 
 Welcome to the gdUnit4Net basics! This section provides step-by-step tutorials and fundamental examples to get you started with
 unit testing in Godot using C#.
@@ -81,12 +81,12 @@ Master fundamental testing concepts and patterns:
 
 ## Learning Progression
 
-| Step | Focus | What You'll Build |
-| --- | --- | --- |
-| **1. Setup** | Project configuration | Working test projects |
-| **2. Basic Tests** | Fundamental concepts | Simple assertion tests |
-| **3. Godot Tests** | Runtime-specific testing | Tests for Godot objects |
-| **4. Patterns** | Common scenarios | Reusable testing patterns |
+| Step               | Focus                    | What You'll Build         |
+| ------------------ | ------------------------ | ------------------------- |
+| **1. Setup**       | Project configuration    | Working test projects     |
+| **2. Basic Tests** | Fundamental concepts     | Simple assertion tests    |
+| **3. Godot Tests** | Runtime-specific testing | Tests for Godot objects   |
+| **4. Patterns**    | Common scenarios         | Reusable testing patterns |
 
 ## When to Use Each Setup
 
