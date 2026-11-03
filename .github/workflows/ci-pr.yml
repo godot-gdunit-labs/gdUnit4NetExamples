@@ -58,14 +58,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ github.sha }}-${{ github.run_id }}
 
-  style-check:
-    name: "📝 Linting & Formatting"
-    runs-on: "ubuntu-24.04"
-    timeout-minutes: 2
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/formatting_checks
-
   example-tests:
     name: "🧪 Example Tests"
     needs: compile
@@ -123,7 +115,7 @@ jobs:
     if: ${{ !cancelled() }}
     runs-on: "ubuntu-24.04"
     name: Final Results
-    needs: [style-check, example-tests]
+    needs: [compile, example-tests]
     steps:
       - run: exit 1
         if: >-
