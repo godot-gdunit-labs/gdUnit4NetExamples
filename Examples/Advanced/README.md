@@ -1,4 +1,4 @@
-﻿# Advanced Examples
+# Advanced Examples
 
 Welcome to the advanced gdUnit4Net examples! This section covers sophisticated testing techniques, professional configurations,
 and complex scenarios you'll encounter in real-world Godot projects.

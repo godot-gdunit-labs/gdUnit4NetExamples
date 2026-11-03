@@ -128,14 +128,14 @@ After running tests, check the `./TestResults` directory for:
 
 ## Comparison with Basic Setup
 
-| Aspect | RequireGodotTestProjectSetup | TestWithRunsettings |
-| --- | --- | --- |
-| **Configuration** | Environment variables | .runsettings file |
-| **Team Sharing** | Manual setup required | Automatic with code |
-| **CI/CD Setup** | Environment configuration needed | Works out of the box |
-| **Test Reports** | Basic console output | Multiple formats (HTML, TRX) |
-| **Debugging** | Limited options | Advanced logging controls |
-| **Godot Parameters** | Fixed | Configurable per environment |
+| Aspect               | RequireGodotTestProjectSetup     | TestWithRunsettings          |
+| -------------------- | -------------------------------- | ---------------------------- |
+| **Configuration**    | Environment variables            | .runsettings file            |
+| **Team Sharing**     | Manual setup required            | Automatic with code          |
+| **CI/CD Setup**      | Environment configuration needed | Works out of the box         |
+| **Test Reports**     | Basic console output             | Multiple formats (HTML, TRX) |
+| **Debugging**        | Limited options                  | Advanced logging controls    |
+| **Godot Parameters** | Fixed                            | Configurable per environment |
 
 ## Troubleshooting
 

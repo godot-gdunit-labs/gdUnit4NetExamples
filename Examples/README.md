@@ -1,4 +1,4 @@
-﻿# Examples
+# Examples
 
 Welcome to the gdUnit4Net examples! This section contains hands-on examples and tutorials to help you learn unit testing
 with gdUnit4Net in Godot.

@@ -287,15 +287,15 @@ No manual symlink creation needed!
 
 ## Comparison with Other Setups
 
-| Aspect | Single Project | Multi-Project with ProjectReference | Multi-Project with Symlinks (This) |
-| --- | --- | --- | --- |
-| **Resource Paths** | Direct access | Need adjustment | Original paths preserved |
-| **Build Complexity** | Simple | CS0436 warnings | Clean build |
-| **Assembly Count** | One | Two | One (test only) |
-| **Disk Usage** | Minimal | Minimal | Minimal |
-| **Git Complexity** | Simple | Simple | Simple (symlinks ignored) |
-| **CI/CD Setup** | Simple | Simple | Simple (InitialTargets) |
-| **Team Workflow** | Mixed code | Clean separation | Clean separation |
+| Aspect               | Single Project | Multi-Project with ProjectReference | Multi-Project with Symlinks (This) |
+| -------------------- | -------------- | ----------------------------------- | ---------------------------------- |
+| **Resource Paths**   | Direct access  | Need adjustment                     | Original paths preserved           |
+| **Build Complexity** | Simple         | CS0436 warnings                     | Clean build                        |
+| **Assembly Count**   | One            | Two                                 | One (test only)                    |
+| **Disk Usage**       | Minimal        | Minimal                             | Minimal                            |
+| **Git Complexity**   | Simple         | Simple                              | Simple (symlinks ignored)          |
+| **CI/CD Setup**      | Simple         | Simple                              | Simple (InitialTargets)            |
+| **Team Workflow**    | Mixed code     | Clean separation                    | Clean separation                   |
 
 ## Troubleshooting
 
