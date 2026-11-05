@@ -23,9 +23,9 @@
     <PackageVersion Include="gdUnit4.analyzers" Version="$(GdUnit4AnalyzersVersion)"/>
 
     <!-- .NET test platform -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0"/>
 
     <!-- Code analyzers -->
-    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.507"/>
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556"/>
   </ItemGroup>
 </Project>
