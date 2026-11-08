@@ -153,7 +153,7 @@ public class SignalTest
 
         // Simulate realistic user mouse interaction
         runner
-            .SetMousePos(button.Position + new Vector2(5, 5)) // Position mouse inside button bounds
+            .SetMousePosition(button.Position + new Vector2(5, 5)) // Position mouse inside button bounds
             .SimulateMouseButtonPressed(MouseButton.Left); // Generate left mouse button press event
 
         // Assert signal emission within reasonable timeout window

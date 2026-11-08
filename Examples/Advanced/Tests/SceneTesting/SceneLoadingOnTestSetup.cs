@@ -49,11 +49,13 @@ public class SceneLoadingOnTestSetup
     ///     This verifies that the autoFree mechanism worked correctly and no
     ///     memory leaks or hanging references remain.
     ///     Expected state:
-    ///     - Scene should be null (properly cleaned up)
-    ///     - All resources have been freed.
+    ///     - The runner has been disposed by autoFree
+    ///     - Accessing the scene of a disposed runner throws an ObjectDisposedException.
     /// </summary>
     [After]
-    public void Teardown() => AssertThat(runner.Scene()).IsNull();
+    public void Teardown()
+        => AssertThrown(() => runner.Scene())
+            .IsInstanceOf<ObjectDisposedException>();
 
     /// <summary>
     ///     Per-test setup method executed before each individual test case.

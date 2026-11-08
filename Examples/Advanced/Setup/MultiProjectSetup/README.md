@@ -1,323 +1,158 @@
-# Multi-Project Test Setup with Symbolic Links
+# Multi-Project Test Setup
 
-An advanced example demonstrating how to test Godot projects in a multi-project solution using symbolic links to preserve resource paths
-and maintain clean separation between production and test code.
+An advanced example demonstrating how to test a Godot game from a separate test project. The test project references the game project, and the
+game's scenes, resources, scripts, input map, autoloads and project settings are available at test runtime without any further setup.
+
+> Multi-project support requires `gdUnit4.api` 5.1.0-rc7 or later. For the full background, read the
+> [multi-project guide](https://github.com/godot-gdunit-labs/gdUnit4Net/blob/master/Api/doc/multi-project.md).
 
 ## What This Example Shows
 
-This project demonstrates:
-
-- **Multi-project test architecture** with separate test and production projects
-- **Symbolic link strategy** for resource path preservation
-- **Single assembly compilation** without ProjectReference
-- **Cross-platform compatibility** for Windows, Linux, and macOS
-- **Git-friendly setup** with proper .gitignore configuration
-- **CI/CD ready structure** with automated symlink creation
+- **Separate game and test projects**, each with its own `project.godot` and C# project
+- **A plain `ProjectReference`** from the test project to the game project, no file copying or symbolic links
+- **Game scenes and resources** loaded by `res://` and `uid://` paths
+- **Game project settings** at test runtime: input actions, autoloads and custom settings
+- **Input simulation** on a game scene using the game's input actions
 
 ## Why Use Multi-Project Setup?
 
-### Advantages over Single Project
-
-- **Clean Separation**: Tests don't bloat production builds
-- **Independent Dependencies**: Test-only packages stay in test project
-- **Better Organization**: Clear boundaries between test and production code
-- **Flexible Deployment**: Ship production without test dependencies
-- **IDE Performance**: Faster IntelliSense with smaller project scopes
-
-### When to Use
-
-- ✅ Large projects requiring extensive test coverage
-- ✅ Team projects with dedicated QA/test developers
-- ✅ Production builds where size and dependencies matter
-- ✅ Projects following enterprise architecture patterns
-- ✅ When you need different build configurations for test vs production
-
-## Files Overview
-
-### Main Project (ExampleProject/)
-
-- **`ExampleProject.csproj`** - Production project with Godot SDK
-- **`project.godot`** - Godot project configuration
-- **`src/`** - Source code, scenes, and resources
-
-### Test Project (ExampleProject.Test/)
-
-- **`ExampleProject.Test.csproj`** - Test project with GdUnit4 configuration and InitialTargets
-- **`.gitignore`** - Excludes symlinked folders from version control
-- **`test/`** - Test files and test-specific resources
-- **`src/`** - Symlink to main project's src folder (created automatically before build)
-
-## Key Configuration: InitialTargets
-
-The critical part of this setup is using `InitialTargets` to create the symlink **before** MSBuild evaluates which files to compile:
-
-```xml
-<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
-```
-
-This ensures:
-
-- ✅ Symlink exists before MSBuild scans for .cs files
-- ✅ No explicit `<Compile Include>` directives needed
-- ✅ Works consistently in both local and CI environments
-
-## Key Configuration Sections
-
-### 1. Test Project Configuration
-
-```xml
-<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <RootNamespace>GdUnit4.Examples.Advanced.Setup.MultiProjectSetup</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- Ensures all dependencies are copied to output for test execution -->
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <!-- Identifies this as a GdUnit4 test project for test discovery -->
-    <TestFramework>GdUnit4</TestFramework>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <!-- NO ProjectReference - we compile from symlinked source instead -->
-    
-    <!-- Core .NET testing infrastructure -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
-    <!-- Test frameworks -->
-    <PackageReference Include="gdUnit4.api" Version="5.1.0-rc6"/>
-    <!-- Test adapter to integrate GdUnit4 with .NET test runners -->
-    <PackageReference Include="gdUnit4.test.adapter" Version="3.2.0"/>
-  </ItemGroup>
-</Project>
-```
-
-### 2. Symbolic Link Creation (InitialTargets)
-
-```xml
-<!-- This target runs BEFORE MSBuild evaluates files, thanks to InitialTargets -->
-<Target Name="CreateSymlinks">
-  <PropertyGroup>
-    <SrcSource>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../ExampleProject/src'))</SrcSource>
-    <SrcTarget>$(MSBuildProjectDirectory)/src</SrcTarget>
-  </PropertyGroup>
-  
-  <!-- Windows: Creates directory symlink or junction as fallback -->
-  <Exec Command="if not exist &quot;$(SrcTarget)&quot; mklink /D &quot;$(SrcTarget)&quot; &quot;$(SrcSource)&quot;"
-        Condition="'$(OS)' == 'Windows_NT'"
-        ContinueOnError="true"/>
-  
-  <!-- Unix/Linux/Mac: Creates symbolic link -->
-  <Exec Command="[ ! -L '$(SrcTarget)' ] &amp;&amp; ln -s '$(SrcSource)' '$(SrcTarget)' || true"
-        Condition="'$(OS)' != 'Windows_NT'"
-        ContinueOnError="true"/>
-</Target>
-```
-
-### 3. Git Configuration
-
-```gitignore
-# .gitignore in test project
-.godot/
-src        # Symlinked folder - don't commit
-```
+- **Clean Separation**: Tests and test-only packages don't end up in the game build
+- **Better Organization**: Clear boundaries between game and test code
+- **Flexible Deployment**: Ship the game without test dependencies
 
 ## Project Structure
 
 ```shell
-Solution/
-├── ExampleProject/
+MultiProjectSetup/
+├── ExampleProject/                    # The game project
 │   ├── ExampleProject.csproj
-│   ├── project.godot
+│   ├── project.godot                  # Input map, autoload and custom settings
+│   ├── icon.svg
 │   └── src/
-│       ├── ExampleScene.tscn
-│       ├── ExampleScene.cs
-│       ├── Calculator.cs
-│       └── scenes/
-│           └── LabelScene.tscn
+│       ├── Calculator.cs              # Plain C# logic
+│       ├── ExampleScene.tscn/.cs      # Scene with a game sub-scene
+│       ├── GameState.cs               # Autoload 'GameState'
+│       ├── Player.tscn/.cs            # Uses input actions, settings and the autoload
+│       ├── PlayerStats.cs             # Custom resource type
+│       ├── player_stats.tres          # Custom resource instance
+│       └── scenes/LabelScene.tscn
 │
-├── ExampleProject.Test/
-│   ├── ExampleProject.Test.csproj  [with InitialTargets="CreateSymlinks"]
-│   ├── .gitignore
-│   ├── src -> ../ExampleProject/src  [SYMLINK - created before build]
+├── ExampleProject.Test/               # The test project
+│   ├── ExampleProject.Test.csproj     # References ExampleProject.csproj
+│   ├── project.godot                  # The test project's own Godot project
 │   └── test/
-│       ├── CalculatorTest.cs
-│       └── ExampleSceneTest.cs
+│       ├── CalculatorTest.cs          # Logic-only test, runs without Godot
+│       ├── ExampleSceneTest.cs        # Runs a game scene
+│       ├── GameResourceTest.cs        # Loads game resources by path and uid
+│       ├── PlayerSceneTest.cs         # Game scene with input actions and autoload
+│       └── ProjectSettingsTest.cs     # Game input map, autoload and settings
 │
 └── ExampleProject.sln
 ```
 
-## How It Works
+## Configure the Test Project
 
-1. **Build starts** → `InitialTargets="CreateSymlinks"` runs first
-2. **Symlink created** → `src/` folder now points to main project
-3. **MSBuild evaluates** → Finds all .cs files in `src/` and `test/`
-4. **Compilation** → All source files compiled into test assembly
-5. **Tests run** → Can access both code and resources
+Add a project reference to the game project in the test project's C# project file:
 
-## Setting Up the Project
+```xml
+<Project Sdk="Godot.NET.Sdk/4.7.0">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <TestFramework>GdUnit4</TestFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The game project: gdUnit4 mounts its resources, scenes and settings at test runtime -->
+    <ProjectReference Include="../ExampleProject/ExampleProject.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="gdUnit4.api"/>
+    <PackageReference Include="gdUnit4.test.adapter"/>
+  </ItemGroup>
+</Project>
+```
+
+The package versions come from the central [Directory.Packages.props](../../../../Directory.Packages.props) of this repository.
+
+The `gdUnit4.api` package detects referenced projects that contain a `project.godot` file and prepares them before a test run.
+
+## Using the Game Project in Tests
+
+### Scenes and Resources
+
+The game files keep their own `res://` paths:
+
+```csharp
+var stats = GD.Load<PlayerStats>("res://src/player_stats.tres");
+var byUid = GD.Load<PlayerStats>("uid://mpstats001");
+var runner = ISceneRunner.Load<Player>("res://src/Player.tscn", true);
+```
+
+### Input Actions
+
+The game's input map is applied, so a game scene can be driven by its own actions:
+
+```csharp
+[TestCase]
+public async Task GameSceneReactsOnInputAction()
+{
+    var runner = ISceneRunner.Load<Player>("res://src/Player.tscn", true);
+
+    runner.SimulateActionPressed("jump");
+    await runner.AwaitInputProcessed();
+
+    AssertThat(runner.Scene().JumpCount).IsEqual(1);
+}
+```
+
+### Autoloads and Project Settings
+
+```csharp
+var gameState = ((SceneTree)Engine.GetMainLoop()).Root.GetNode<GameState>("GameState");
+var lives = ProjectSettings.GetSetting("game/rules/start_lives").AsInt32();
+```
+
+## Rules and Limitations
+
+- The test project remains the runtime's root project. Settings marked by Godot as requiring a restart, such as `application/config/name`, keep the test project's
+  values (see `ProjectSettingsTest.TestProjectIdentityIsKept`).
+- A file in the test project hides a game file with the same `res://` path. gdUnit4 reports these collisions as warnings.
+- GDExtensions of the game project are not loaded dynamically. Add required extensions to the test project.
+- Project preparation runs only for test suites marked `[RequireGodotRuntime]`. Logic-only tests like `CalculatorTest` run without starting Godot.
+- To disable mounting referenced projects, set `<GdUnit4MountGodotProjectReferences>false</GdUnit4MountGodotProjectReferences>` in the test project.
+
+See the [multi-project guide](https://github.com/godot-gdunit-labs/gdUnit4Net/blob/master/Api/doc/multi-project.md) for details on runtime behavior and
+performance.
+
+## Running Tests
 
 ### Prerequisites
 
 - .NET 9.0 SDK or later
-- Godot 4.5+ (compatible with your Godot.NET.Sdk version)
-- GdUnit4 test adapter
-- **Windows**: Administrator privileges or Developer Mode enabled (for symlinks)
-- **Linux/macOS**: Standard user permissions
-
-### Initial Setup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository>
-   cd MultiProjectSetup
-   ```
-
-2. **Build the solution**
-
-   ```bash
-   dotnet build
-   ```
-
-   The symlink will be created automatically before the build starts.
-
-3. **Run tests**
-
-   ```bash
-   cd ExampleProject.Test
-   dotnet test
-   ```
-
-### Windows-Specific Setup
-
-If symlink creation fails on Windows:
-
-#### Option 1: Enable Developer Mode (Recommended)
-
-1. Open Settings → Update & Security → For Developers
-2. Enable "Developer Mode"
-3. Rebuild the project
-
-#### Option 2: Run as Administrator
-
-1. Open terminal as Administrator
-2. Navigate to project directory
-3. Run `dotnet build`
-
-#### Option 3: Junction (Automatic Fallback)
-
-The project automatically falls back to junctions if symlinks fail:
-
-```cmd
-mklink /J src ..\ExampleProject\src
-```
-
-## Resource Path Resolution
-
-The symlink strategy ensures resource paths work identically in both projects:
-
-**In Main Project:**
-
-```csharp
-var scene = GD.Load<PackedScene>("res://src/scenes/LabelScene.tscn");
-var icon = GD.Load<Texture2D>("res://src/assets/icon.png");
-```
-
-**In Test Project (with symlink):**
-
-```csharp
-// Same paths work because of the symlink!
-var scene = GD.Load<PackedScene>("res://src/scenes/LabelScene.tscn");
-var icon = GD.Load<Texture2D>("res://src/assets/icon.png");
-```
-
-### Why Not Use ProjectReference?
-
-Using `<ProjectReference>` would cause:
-
-- **CS0436 warnings** - Types compiled twice (from reference AND symlink)
-- **Assembly conflicts** - Two versions of the same types
-- **Complexity** - Need to exclude files from compilation
-
-Our approach compiles everything once in the test project.
-
-## Running Tests
+- Godot 4.7 .NET (matching the `Godot.NET.Sdk` version)
+- `GODOT_BIN` pointing to the Godot executable, set as environment variable or in `.runsettings`
 
 ### Command Line
 
 ```bash
-# From solution root
-dotnet test
+# Build the solution
+dotnet build
 
-# With specific verbosity
-dotnet test -v detailed
+# Run the tests
+dotnet test ExampleProject.Test
 
 # With filter
-dotnet test --filter "FullyQualifiedName~CalculatorTest"
+dotnet test ExampleProject.Test --filter "FullyQualifiedName~PlayerSceneTest"
 ```
 
-### Visual Studio / Rider
+### Visual Studio / Rider / VS Code
 
-1. Open the solution file
-2. Build the solution (symlinks created automatically via InitialTargets)
-3. Use Test Explorer to run tests
-
-### VS Code
-
-1. Install C# and .NET Test Explorer extensions
-2. Open the workspace
-3. Tests appear in Testing sidebar
-4. Run individually or all at once
-
-## CI/CD Integration
-
-The setup works automatically in CI/CD pipelines thanks to InitialTargets:
-
-```yaml
-# GitHub Actions example
-- name: Build
-  run: dotnet build  # Symlink created automatically
-  
-- name: Test
-  run: dotnet test
-```
-
-No manual symlink creation needed!
-
-## Comparison with Other Setups
-
-| Aspect               | Single Project | Multi-Project with ProjectReference | Multi-Project with Symlinks (This) |
-| -------------------- | -------------- | ----------------------------------- | ---------------------------------- |
-| **Resource Paths**   | Direct access  | Need adjustment                     | Original paths preserved           |
-| **Build Complexity** | Simple         | CS0436 warnings                     | Clean build                        |
-| **Assembly Count**   | One            | Two                                 | One (test only)                    |
-| **Disk Usage**       | Minimal        | Minimal                             | Minimal                            |
-| **Git Complexity**   | Simple         | Simple                              | Simple (symlinks ignored)          |
-| **CI/CD Setup**      | Simple         | Simple                              | Simple (InitialTargets)            |
-| **Team Workflow**    | Mixed code     | Clean separation                    | Clean separation                   |
+Open `ExampleProject.sln`, build the solution and run the tests from the test explorer.
 
 ## Troubleshooting
-
-### Symlink Not Created
-
-**Problem:** Build fails with "type or namespace not found" errors
-
-**Solution:** Ensure InitialTargets is set in the project file:
-
-```xml
-<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
-```
-
-### Windows Symlink Issues
-
-**Problem:** "You do not have sufficient privilege"
-
-**Solutions:**
-
-1. Enable Developer Mode (best option)
-2. Run as Administrator
-3. Let it fall back to junction (automatic)
 
 ### Resources Not Found
 
@@ -325,38 +160,20 @@ No manual symlink creation needed!
 
 **Check:**
 
-- Symlink exists: `ls -la ExampleProject.Test/`
-- Manually create if needed: `ln -s ../ExampleProject/src src`
-- Verify .gitignore isn't excluding needed files
+- The test project has a `ProjectReference` to the game project
+- The game project folder contains a `project.godot`
+- `gdUnit4.api` is 5.1.0-rc7 or later
+- The test suite is marked with `[RequireGodotRuntime]`
 
 ### Test Discovery Issues
 
-- Ensure GdUnit4 test adapter is installed
-- Check test class has `[TestSuite]` attribute
-- Verify test methods have `[TestCase]` attribute
-- Rebuild solution if tests aren't detected
-
-## Best Practices
-
-1. **No ProjectReference**: Don't add reference to main project
-2. **Use InitialTargets**: Ensures symlink exists before build
-3. **Keep Tests Isolated**: Don't modify shared resources in tests
-4. **Test Data**: Create test-specific data when needed
-5. **Clean State**: Reset any modified state after tests
-6. **Documentation**: Document any special setup requirements
-
-## Key Takeaways
-
-- **InitialTargets** is crucial - runs before MSBuild file evaluation
-- **No ProjectReference** needed - avoid duplicate compilation
-- **Symlinks preserve paths** - resources load identically
-- **Single assembly** - test project contains everything
-- **Works everywhere** - local, CI/CD, all platforms
+- Ensure the gdUnit4 test adapter is installed
+- Check the test class has the `[TestSuite]` attribute
+- Verify test methods have the `[TestCase]` attribute
+- Rebuild the solution if tests aren't detected
 
 ## Additional Resources
 
-- [GdUnit4 Documentation](https://github.com/MikeSchulze/gdUnit4Net)
-- [Godot Testing Best Practices](https://docs.godotengine.org/en/stable/tutorials/best_practices/)
+- [Multi-project guide](https://github.com/godot-gdunit-labs/gdUnit4Net/blob/master/Api/doc/multi-project.md)
+- [gdUnit4Net Documentation](https://github.com/godot-gdunit-labs/gdUnit4Net)
 - [.NET Testing Documentation](https://docs.microsoft.com/en-us/dotnet/core/testing/)
-- [MSBuild InitialTargets](https://docs.microsoft.com/en-us/visualstudio/msbuild/target-build-order)
-- [Symbolic Links on Windows](https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/create-symbolic-links)

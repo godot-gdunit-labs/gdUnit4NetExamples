@@ -10,9 +10,8 @@ config_version=5
 
 [application]
 
-config/name="ExampleProject"
-config/features=PackedStringArray("4.5", "4.5.1", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+config/name="ExampleProject.Test"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 
 [dotnet]
 

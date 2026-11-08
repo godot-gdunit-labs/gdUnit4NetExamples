@@ -18,7 +18,7 @@ Before diving into advanced examples, ensure you understand:
 
 1. [Global Test Settings](Setup/TestWithRunsettings/README.md) - Professional test configuration using .runsettings files
 2. [Compile-time Analysis](Setup/TestWithAnalyzers/README.md) - Static analysis and error prevention with gdUnit4.analyzers
-3. [Multi-Project Testing](Setup/MultiProjectSetup/README.md) - Separate test and production projects with symlinks
+3. [Multi-Project Testing](Setup/MultiProjectSetup/README.md) - Separate game and test projects with a project reference
 4. [Complex Test Scenarios](Tests/) - Advanced testing patterns and techniques
 
 ## Advanced Topics Structure
@@ -29,7 +29,7 @@ The advanced examples are organized into:
 ├── Setup/              # Advanced project configurations
 │   ├── TestWithRunsettings/    # Professional test settings configuration
 │   ├── TestWithAnalyzers/      # Compile-time validation and code analysis 
-│   └── MultiProjectSetup/      # Multi-project architecture with symlinks
+│   └── MultiProjectSetup/      # Multi-project architecture with a project reference
 └── Tests/              # Complex testing scenarios and patterns
     ├── SceneTesting/           # Scene loading, lifecycle, and interaction testing
     ├── InputTesting/           # Mouse, keyboard, and user input simulation
@@ -58,10 +58,9 @@ Professional project configurations for production-ready test environments:
 
 - **MultiProjectSetup**: Separate test and production projects architecture
   - Clean separation between production and test code
-  - Symbolic links for resource path preservation
-  - Single assembly compilation without code duplication
-  - Cross-platform compatibility (Windows, Linux, macOS)
-  - Git-friendly setup with proper .gitignore configuration
+  - Test project references the game project with a plain `ProjectReference`
+  - Game scenes, resources, input map, autoloads and project settings available at test runtime
+  - Requires `gdUnit4.api` 5.1.0-rc7 or later
 
 ### Tests/
 
@@ -94,7 +93,7 @@ Advanced testing patterns and complex scenarios:
 ### Project Architecture
 
 - Multi-project solution organization for large codebases
-- Symbolic link strategies for resource sharing
+- Referencing a game project to use its resources and settings in tests
 - Clean separation of concerns between test and production
 - Managing dependencies and references effectively
 
@@ -182,23 +181,23 @@ Advanced testing patterns and complex scenarios:
 | Aspect                   | TestWithRunsettings          | MultiProjectSetup           | TestWithAnalyzers                 |
 |--------------------------|------------------------------|-----------------------------|-----------------------------------|
 | **Primary Focus**        | Test execution configuration | Project architecture        | Code quality and error prevention |
-| **Configuration Method** | .runsettings files           | Symbolic links & .csproj    | gdUnit4.analyzers package         |
+| **Configuration Method** | .runsettings files           | ProjectReference in .csproj | gdUnit4.analyzers package         |
 | **Team Benefits**        | Consistent test settings     | Clean code separation       | Enforced coding standards         |
 | **CI/CD Integration**    | Multiple output formats      | Isolated test environment   | Early error detection             |
 | **Developer Experience** | Professional test reports    | Better IDE performance      | Real-time feedback in IDE         |
-| **Error Prevention**     | Runtime configuration issues | Assembly conflicts (CS0436) | Compile-time validation           |
+| **Error Prevention**     | Runtime configuration issues | Test code in game builds    | Compile-time validation           |
 | **Best For**             | Team environments            | Large projects              | Code quality enforcement          |
 
 ## Project Architecture Comparison
 
-| Aspect             | Single Project | Multi-Project with Copy | Multi-Project with Symlinks |
-|--------------------|----------------|-------------------------|-----------------------------|
-| **Resource Paths** | Direct access  | Path adjustments needed | Original paths preserved    |
-| **Build Time**     | Fastest        | Slower (file copying)   | Fast (symlink creation)     |
-| **Disk Usage**     | Minimal        | Duplicated resources    | Minimal (symlinks)          |
-| **Git Complexity** | Simple         | Complex (duplicates)    | Simple (symlinks ignored)   |
-| **Team Workflow**  | Mixed code     | Clean separation        | Clean separation            |
-| **Maintenance**    | Harder         | Medium                  | Easiest                     |
+| Aspect              | Single Project       | Multi-Project with ProjectReference |
+|---------------------|----------------------|-------------------------------------|
+| **Resource Paths**  | Direct access        | Original paths preserved            |
+| **Game Settings**   | Direct access        | Applied at test runtime             |
+| **Build Setup**     | Simple               | Simple (one `ProjectReference`)     |
+| **Git Complexity**  | Simple               | Simple                              |
+| **Team Workflow**   | Mixed code           | Clean separation                    |
+| **Game Build Size** | Includes test code   | Game only                           |
 
 ## Next Steps
 
