@@ -39,7 +39,7 @@ public class MouseInputTest
     }
 
     /// <summary>
-    ///     Tests mouse positioning with SetMousePos method.
+    ///     Tests mouse positioning with SetMousePosition method.
     ///     Validates that mouse position is correctly set and tracked.
     /// </summary>
     /// <returns>
@@ -50,7 +50,7 @@ public class MouseInputTest
     {
         var targetPos = new Vector2(150, 100);
 
-        runner.SetMousePos(targetPos);
+        runner.SetMousePosition(targetPos);
         await runner.AwaitInputProcessed();
 
         // Validate through scene property and Godot's viewport
@@ -69,7 +69,7 @@ public class MouseInputTest
     public async Task LeftMouseButtonPressRelease()
     {
         var clickPos = new Vector2(200, 150);
-        runner.SetMousePos(clickPos);
+        runner.SetMousePosition(clickPos);
 
         // Press and hold
         runner.SimulateMouseButtonPress(MouseButton.Left);
@@ -98,7 +98,7 @@ public class MouseInputTest
     public async Task MouseButtonClick()
     {
         var clickPos = new Vector2(100, 100);
-        runner.SetMousePos(clickPos);
+        runner.SetMousePosition(clickPos);
         runner.SimulateMouseButtonPressed(MouseButton.Left);
         await runner.AwaitInputProcessed();
 
@@ -118,7 +118,7 @@ public class MouseInputTest
     [TestCase]
     public async Task RightMouseButton()
     {
-        runner.SetMousePos(new Vector2(300, 200));
+        runner.SetMousePosition(new Vector2(300, 200));
         runner.SimulateMouseButtonPressed(MouseButton.Right);
         await runner.AwaitInputProcessed();
 
@@ -137,7 +137,7 @@ public class MouseInputTest
     public async Task DoubleClickDetection()
     {
         var clickPos = new Vector2(150, 150);
-        runner.SetMousePos(clickPos);
+        runner.SetMousePosition(clickPos);
 
         // Simulate double-click
         runner.SimulateMouseButtonPressed(MouseButton.Left, true);
@@ -158,7 +158,7 @@ public class MouseInputTest
     [TestCase]
     public async Task MultipleMouseButtons()
     {
-        runner.SetMousePos(new Vector2(250, 250));
+        runner.SetMousePosition(new Vector2(250, 250));
 
         // Press left button and hold
         runner.SimulateMouseButtonPress(MouseButton.Left);
@@ -195,7 +195,7 @@ public class MouseInputTest
         var startPos = new Vector2(50, 50);
         var endPos = new Vector2(400, 300);
 
-        runner.SetMousePos(startPos);
+        runner.SetMousePosition(startPos);
         runner.SimulateMouseMove(endPos);
         await runner.AwaitInputProcessed();
 
@@ -216,7 +216,7 @@ public class MouseInputTest
 
         // Click while Ctrl is held
         runner.SimulateKeyPress(Key.Ctrl);
-        runner.SetMousePos(clickPos);
+        runner.SetMousePosition(clickPos);
         runner.SimulateMouseButtonPressed(MouseButton.Left);
         await runner.AwaitInputProcessed();
 
@@ -244,12 +244,12 @@ public class MouseInputTest
         var insidePos = button.Position + (button.Size / 2);
 
         // Move mouse outside button
-        runner.SetMousePos(outsidePos);
+        runner.SetMousePosition(outsidePos);
         await runner.AwaitInputProcessed();
         AssertThat(button.IsHovered()).IsFalse();
 
         // Move mouse inside button
-        runner.SetMousePos(insidePos);
+        runner.SetMousePosition(insidePos);
         await runner.AwaitInputProcessed();
         AssertThat(button.IsHovered()).IsTrue();
     }

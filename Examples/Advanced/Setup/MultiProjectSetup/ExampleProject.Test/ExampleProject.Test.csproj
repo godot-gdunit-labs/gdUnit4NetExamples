@@ -1,9 +1,9 @@
 ﻿<!--
     Test project for gdUnit4Net - Multi-Project Setup
-    Uses symbolic links to share source code between main and test projects
-    without duplicating files or using ProjectReference
+    References the game project directly. Since gdUnit4.api 5.1.0-rc7 the game's scenes, resources, scripts,
+    input map, autoloads and project settings are available at test runtime without any further setup.
 -->
-<Project Sdk="Godot.NET.Sdk/4.7.0" InitialTargets="CreateSymlinks">
+<Project Sdk="Godot.NET.Sdk/4.7.0">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -11,7 +11,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <RootNamespace>GdUnit4.Examples.Advanced.Setup.MultiProjectSetup</RootNamespace>
+    <RootNamespace>GdUnit4.Examples.Advanced.Setup.MultiProjectSetup.Test</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -22,6 +22,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- The game project: gdUnit4 mounts its resources, scenes and settings at test runtime -->
+    <ProjectReference Include="../ExampleProject/ExampleProject.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Core .NET testing infrastructure -->
     <PackageReference Include="Microsoft.NET.Test.Sdk"/>
     <!-- GdUnit4 testing framework for Godot -->
@@ -29,47 +34,4 @@
     <!-- Test adapter to integrate GdUnit4 with .NET test runners -->
     <PackageReference Include="gdUnit4.test.adapter"/>
   </ItemGroup>
-
-  <!--
-    ============================================================
-    SYMBOLIC LINK CREATION (Runs before MSBuild evaluation)
-
-    IMPORTANT: Uses InitialTargets to ensure symlink exists
-    before MSBuild scans for files to compile.
-
-    Creates symlink to the main project's src folder containing:
-    - All C# source files (compiled into this test assembly)
-    - All Godot resources (.tscn, .tres, etc.)
-
-    Benefits:
-    - No ProjectReference needed (avoids CS0436 warnings)
-    - Same resource paths as main project
-    - Single assembly compilation
-    - Works in CI/CD environments
-    ============================================================
-  -->
-  <Target Name="CreateSymlinks">
-    <PropertyGroup>
-      <!-- Define source and target paths for both symlinks -->
-      <SrcSource>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../ExampleProject/src'))</SrcSource>
-      <SrcTarget>$(MSBuildProjectDirectory)/src</SrcTarget>
-    </PropertyGroup>
-
-    <!-- Windows: Create symlinks -->
-    <Exec Command="if not exist &quot;$(SrcTarget)&quot; mklink /D &quot;$(SrcTarget)&quot; &quot;$(SrcSource)&quot;"
-          Condition="'$(OS)' == 'Windows_NT'"
-          ContinueOnError="true"/>
-
-    <!-- Unix/Linux/Mac: Create symlinks -->
-    <Exec Command="[ ! -L '$(SrcTarget)' ] &amp;&amp; ln -s '$(SrcSource)' '$(SrcTarget)' || true"
-          Condition="'$(OS)' != 'Windows_NT'"
-          ContinueOnError="true"/>
-
-    <!-- Verify symlink exists and is accessible -->
-    <Error Condition="!Exists('$(SrcTarget)')"
-           Text="Failed to create symlink at $(SrcTarget). On Windows, try running as Administrator or enabling Developer Mode."/>
-    
-    <!-- Log confirmation -->
-    <Message Text="✓ Symlink verified: $(SrcTarget) -> $(SrcSource)" Importance="high"/>
-  </Target>
 </Project>

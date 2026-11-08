@@ -1,13 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
 
-# ============================================
-# SYMBOLIC LINKS / JUNCTIONS
-# ============================================
-# Ignore the symlink to ExampleProject/src folder in the test directory
-# This symlink is created during build/test and should not be committed
-src
-
-
 # Do not commit the test runner directory
 gdunit4_testadapter_v5

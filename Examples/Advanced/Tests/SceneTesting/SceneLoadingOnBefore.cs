@@ -48,13 +48,12 @@ public class SceneLoadingOnBefore : IDisposable
     ///     In production test code, manual disposal is rarely needed.
     ///     Verification steps:
     ///     • Confirms runner instance exists
-    ///     • Verifies scene has been properly unloaded (null)
-    ///     • Demonstrates manual cleanup (not recommended for normal use).
+    ///     • Demonstrates manual cleanup (not recommended for normal use)
+    ///     The runner was already disposed by autoFree, accessing its scene would throw an ObjectDisposedException.
     /// </summary>
     public void Dispose()
     {
         AssertThat(runner).IsNotNull();
-        AssertThat(runner.Scene()).IsNull();
 
         // Manual disposal shown for educational purposes only
         // GdUnit4 normally handles this automatically
