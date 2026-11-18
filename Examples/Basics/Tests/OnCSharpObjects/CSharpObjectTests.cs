@@ -113,6 +113,10 @@ public class CSharpObjectTests
 ///     Simple example class for testing C# objects.
 ///     Demonstrates a basic C# class with properties that can be tested.
 /// </summary>
+/// <param name="name">The player name.</param>
+/// <param name="level">The player level.</param>
+/// <param name="health">The player health.</param>
+/// <param name="isAlive">Whether the player is alive.</param>
 #pragma warning disable CS1591, SA1402, SA1600
 [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Reviewed.")]
 public class Player(string name, int level, float health, bool isAlive)
