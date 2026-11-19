@@ -1,0 +1,8 @@
+# Git attributes file - controls how Git handles line endings and file processing
+# This ensures consistent behavior across different operating systems (Windows, macOS, Linux)
+
+# Normalize EOL for all files that Git considers text files.
+# - text=auto: Let Git automatically detect text files
+# - eol=lf: Convert line endings to LF (Unix-style) in the repository
+# This prevents issues when team members use different operating systems
+* text=auto eol=lf

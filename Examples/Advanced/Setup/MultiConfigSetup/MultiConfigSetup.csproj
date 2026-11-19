@@ -1,0 +1,82 @@
+<!--
+    Test project for gdUnit4Net - uses Godot.NET.Sdk to integrate with Godot's build system
+    This enables testing of Godot-specific types and functionality
+-->
+<Project Sdk="Godot.NET.Sdk/4.7.0">
+
+  <PropertyGroup>
+    <!-- Target framework -->
+    <TargetFramework>net9.0</TargetFramework>
+
+    <!-- C# language version - enables latest C# features -->
+    <LangVersion>12.0</LangVersion>
+
+    <!-- Automatically includes common using statements (System, System.Collections.Generic, etc.) -->
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Enable nullable reference types for better null safety -->
+    <Nullable>enable</Nullable>
+
+    <!-- Prevents this project from being packaged as a NuGet package -->
+    <IsPackable>false</IsPackable>
+    <RootNamespace>GdUnit4.Examples.Basics.Setup</RootNamespace>
+  </PropertyGroup>
+
+  <!-- The gdUnit4Net tests in tests/ are compiled into the game assembly for development
+       builds only (Debug, Release). In the export configurations Godot uses to build the
+       shipped game (ExportDebug, ExportRelease) the test code and all gdUnit4Net package
+       references are excluded, so exported assemblies stay free of test code.
+       Rider runs its test sessions on Debug by default, where the tests are available. -->
+  <PropertyGroup>
+    <IncludeTestCode Condition=" '$(Configuration)' != 'ExportDebug' and '$(Configuration)' != 'ExportRelease' ">true</IncludeTestCode>
+  </PropertyGroup>
+
+  <!-- The test sources and the gdUnit4Net test runner scene (generated on demand by
+       the test adapter into gdunit4_testadapter*/) are compiled into development
+       builds only, so exported builds contain neither test code nor a runtime-scene
+       script. -->
+  <ItemGroup Condition=" '$(IncludeTestCode)' != 'true' ">
+    <Compile Remove="tests/**/*.cs" />
+    <Compile Remove="gdunit4_testadapter*/**/*.cs" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!--
+        Copies all dependency assemblies to the output directory
+        Required for gdUnit4Net to find all necessary assemblies at runtime
+    -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <!--
+        Only the GdUnit4 test adapter may be discovered, not the plain VSTest one.
+    -->
+    <VSTestTestAdapterPath>none</VSTestTestAdapterPath>
+
+    <!--
+        Explicitly sets the test framework to gdUnit4Net
+        Helps test runners identify which framework to use for test discovery and execution
+    -->
+    <TestFramework>GdUnit4</TestFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+        Core .NET test SDK - provides the foundation for running tests
+        Required by most test adapters and runners
+    -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+
+    <!--
+        gdUnit4Net API - provides the testing framework classes, attributes, and assertions
+        Contains [TestSuite], [TestCase], AssertThat(), and other core testing functionality
+    -->
+    <PackageReference Include="gdUnit4.api"/>
+
+    <!--
+        gdUnit4Net test adapter - enables test discovery and execution in IDEs and CI/CD
+        Allows Visual Studio, Rider, and dotnet test to find and run gdUnit4Net tests
+    -->
+    <PackageReference Include="gdUnit4.test.adapter"/>
+  </ItemGroup>
+
+</Project>
